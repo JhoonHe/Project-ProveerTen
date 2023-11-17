@@ -21,7 +21,7 @@ let paramsGrocer: any = [
     check('last_name_grocer').isLength({ min: 1, max: 40 }),
     check('city_grocer').isLength({ min: 1, max: 50 }),
     check('password_grocer').isLength({ min: 8, max: 20 }),
-    check('neighborhood').isLength({ min: 8, max: 40 }),
+    check('neighborhood').isLength({ min: 8, max: 40 }),    
     check('street').isLength({ min: 1, max: 30 }),
     check('number_street').isLength({ min: 1, max: 5 }),
     check('number_grocer').isLength({ min: 1, max: 15 }),

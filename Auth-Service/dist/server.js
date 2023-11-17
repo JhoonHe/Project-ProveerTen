@@ -23,7 +23,7 @@ class Server {
         // Parseo body
         this.app.use(express_1.default.json());
         // Cors
-        this.app.use((0, cors_1.default)());
+        this.app.use((0, cors_1.default)({ credentials: true, origin: 'http://localhost:4200' }));
     }
     routes() {
         this.app.use('/register', register_1.default);

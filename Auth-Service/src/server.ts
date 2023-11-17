@@ -26,7 +26,7 @@ class Server {
         this.app.use(express.json());
 
         // Cors
-        this.app.use(cors());
+        this.app.use(cors({ credentials: true, origin: 'http://localhost:4200' }));
     }
 
     routes() {
