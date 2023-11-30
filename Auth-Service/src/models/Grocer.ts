@@ -9,4 +9,5 @@ export default interface Grocer {
     street: string;
     number_street: string;
     number_grocer: string;
+    apartment: string
 }

@@ -1,0 +1,314 @@
+drop database proveerten;
+
+create database ProveerTen;
+use ProveerTen; 
+
+create table Provider (
+nit_provider char(15) not null,
+email_provider varchar (55) primary key, 
+name_provider varchar (50) not null,
+last_name_provider varchar (40) not null,
+name_company varchar (100) not null,
+city_provider varchar (40) not null,
+password_provider varchar (100),
+profile_photo_provider varchar (100) null,
+cover_photo_provier varchar (100) null,
+description_provider varchar(1000)
+);
+
+create table ProviderPhone (
+number_provider varchar (15),
+fk_phone_email_provider varchar (55),
+foreign key (fk_Phone_email_Provider) references Provider (email_Provider)
+);
+
+create table ProviderAddress (
+neighborhood varchar (40) not null,
+street varchar (30) not null,
+number_street varchar (25),
+fk_address_email_provider varchar (55),
+foreign key (fk_address_email_provider) references Provider (email_provider)
+);
+
+delimiter //
+create procedure insertProvider
+-- insertProvider
+(
+    in nit_provider_ char(15),
+    in email_provider_ varchar(55),
+    in name_provider_ varchar(50),
+    in last_name_provider_ varchar(40),
+    in name_company_ varchar(100),
+    in city_provider_ varchar(40),
+    in password_provider_ varchar(100),
+    in description_provider_ varchar(1000),
+    in number_provider_ varchar(15),
+    in neighborhood_ varchar(40),
+    in street_ varchar(30),
+    in number_street_ varchar(25),
+    out message_text varchar (255)
+)
+begin
+    declare count_provider int;
+    declare error_message varchar(255);
+    select count(*) into count_provider from provider where email_provider = email_provider_;
+    if count_provider > 0 then
+        set error_message = 'error provider user already exists';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message ;
+    else
+        insert into provider (
+            nit_provider,
+            email_provider,
+            name_provider,
+            last_name_provider,
+            name_company,
+            city_provider,
+            password_provider,
+            description_provider
+        ) values (
+            nit_provider_,
+            email_provider_,
+            name_provider_,
+            last_name_provider_,
+            name_company_,
+            city_provider_,
+            password_provider_,
+            description_provider_
+        );
+        
+		insert into ProviderPhone values (number_provider_, email_provider_);
+        insert into ProviderAddress values (neighborhood_, street_, number_street_, email_provider_);
+       
+        set message_text = 'The provider was successfully entered';
+    end if;
+    select message_text;
+end //
+
+delimiter ;
+
+call insertProvider ("2238t9-25", "proveerTen01@gmail.com", "Alejandro", "Alvarado", "Proveerten", "Armenia", "5522", "prueba 1", "3106124260", "El Granada", "15", "3b", @message_text);
+
+select * from provider;
+select * from ProviderPhone;
+select * from ProviderAddress;
+
+delimiter //
+create procedure get_data_provider(in email_provider_ varchar(55))
+begin
+	declare count_provider int;
+    declare error_message varchar(65);
+    select count(*) into count_provider from provider where email_provider = email_provider_;
+    if count_provider = 0 then
+        set error_message = 'error provider user does not exist';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message ;
+    else
+    select email_provider, password_provider
+    from Provider
+    where email_provider = email_provider_;
+    end if;
+end //
+
+delimiter ;
+
+call get_data_provider ('ejemplo@proveedor.com');
+
+create table Grocer (
+email_grocer varchar (55) primary key,
+name_grocer varchar (40) not null,
+last_name_grocer varchar (40) not null,
+name_store varchar (50) not null,
+city_grocer varchar (40) not null,
+password_grocer varchar (100)
+);
+
+create table GrocerAddress (
+neighborhood varchar (40) not null,
+street varchar (30) not null,
+number_street varchar (25),
+apartment varchar (25),
+fk_address_email_grocer varchar (55),
+foreign key (fk_address_email_grocer) references Grocer (email_grocer)
+);
+
+create table GrocerPhone (
+number_grocer varchar (15),
+fk_phone_email_grocer varchar (55),
+foreign key (fk_phone_email_grocer) references grocer (email_grocer)
+);
+
+delimiter //
+create procedure insertGrocer  (
+	in email_grocer_ varchar (55),
+	in name_grocer_ varchar (40),
+    in last_name_grocer_ varchar (40),
+    in name_store_ varchar (50),
+    in city_grocer_ varchar (40),
+    in password_grocer_ varchar (100),
+    in number_grocer_ varchar (15),
+    in neighborhood_ varchar (40),
+    in street_ varchar (30),
+    in number_street_ varchar (25),
+    in apartment_ varchar (25),
+    out message_text varchar (255)
+)
+begin 
+	declare countGrocer int;
+	declare error_message varchar (255);
+    
+    select count(*)  into countGrocer from Grocer where email_grocer = email_grocer_;
+    
+		if countgrocer > 0 then 
+        set error_message = 'error grocer user already exists';
+          SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message ;
+        
+        else 
+        insert into Grocer values (email_grocer_, name_grocer_, last_name_grocer_, name_store_,city_grocer_,password_grocer_);
+		insert into GrocerPhone values (number_grocer_,email_grocer_);
+		insert into GrocerAddress  values (neighborhood_,street_ ,number_street_,apartment_, email_grocer_ );
+        
+              set message_text = 'The grocer was successfully entered';
+         
+         end if;
+         select message_text;
+end //
+
+delimiter ;
+
+call insertGrocer  ("prove@gmail.com", "Jhoan", "Alvarado", "tiendaQQ", "Armenia", "12345", "3106124260", "El modelo", "25", "6g", "5");
+
+select * from Grocer;
+select * from GrocerAddress;
+select * from GrocerPhone;
+
+delimiter //
+create procedure get_data_grocer(in email_grocer_ varchar(55))
+begin
+	declare count_grocer int;
+    declare error_message varchar(65);
+    select count(*) into count_grocer from grocer where email_grocer = email_grocer_;
+    if count_grocer = 0 then
+        set error_message = 'error grocer user does not exist';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message ;
+    else
+    select email_grocer, password_grocer
+    from grocer
+    where email_grocer = email_grocer_ ;
+    end if;
+end //
+
+delimiter ;
+
+call get_data_grocer ('ejempl2@gmail.com');
+
+-- orden de compra
+Create table Order_  (
+cod_order int auto_increment primary key, 
+order_date timestamp default current_timestamp,
+state_order varchar (20) not null,
+delivery_date timestamp,  
+final_amount float (10,2),
+comments varchar (255),
+fk_order_email_grocer varchar (55),
+foreign key (fk_order_email_grocer) references Grocer (email_grocer)
+);
+
+delimiter //
+create procedure insert_order(
+    in cod_order_ int,
+    in order_date_ timestamp,
+    in state_order_ varchar(20),
+    in delivery_date_ timestamp,
+    in final_amount_ float(10,2),
+    in comments_ varchar(255),
+    in fk_order_email_grocer_ varchar(55)
+)
+begin
+    declare existing_order int;
+        declare error_message varchar (255);
+
+    select count(*) into existing_order from order_ where cod_order = p_cod_order;
+
+    if existing_order = 0 then
+    
+        insert into order_ (cod_order, order_date, state_order, delivery_date, final_amount, comments, fk_order_email_grocer)
+        values (cod_order_, order_date_, state_order_, delivery_date_, final_amount_, comments_, fk_order_email_grocer_);
+        
+        select 'nuevo registro insertado correctamente' as message;
+    else
+     set error_message = 'Error inserting order, check the data';
+          signal sqlstate  '45000' set message_text = error_message ;
+    end if;
+end//
+
+delimiter ;
+
+create table Category (
+	id_category varchar(4) primary key,
+	name_category varchar(12) not null,
+	description_category varchar(20) null
+);
+
+select * from Category; 
+
+create table Product (
+id_product varchar(15) primary key,
+name_product varchar(20) not null,
+description_product varchar(80) not null,
+unitPrice_product float not null,
+suggestedPrice_product float null,
+stock_product int not null,
+image_product varchar(100) not null,
+weight_product float not null,
+gramPrice_product float null,
+availability_product varchar(15) not null,
+fk_product_email_provider varchar (55), foreign key (fk_product_email_provider) references Provider(email_provider),
+fk_product_id_category varchar(4), foreign key (fk_product_id_category) references Category (id_category)
+)
+
+delimiter //
+create procedure insert_product(
+    in id_product_ varchar(15),
+    in name_product_ varchar(20),
+    in description_product_ varchar(80),
+    in unitprice_product_ float,
+    in suggestedprice_product_ float,
+    in stock_product_ int,
+    in image_product_ varchar(100),
+    in weight_product_ float,
+    in gramprice_product_ float,
+    in availability_product_ varchar(15),
+    in fk_product_email_provider_ varchar(55),
+    in fk_product_id_category_ varchar(4)
+)
+begin
+    declare existing_product int;
+	declare error_message varchar (255);
+    select count(*) into existing_product from product where id_product = p_id_product;
+    if existing_product = 0 then
+    
+    
+        insert into product values (
+            id_product_, name_product_, description_product_, unitprice_product_, suggestedprice_product_,
+            stock_product_, image_product_, weight_product_, gramprice_product_, availability_product_,
+            fk_product_email_provider_, fk_product_id_category_
+        );
+        select 'nuevo producto insertado correctamente' as message;
+    else
+      set error_message = 'Error inserting product, check the data';
+          signal sqlstate  '45000' set message_text = error_message ;
+    end if;
+end//
+
+delimiter ;
+
+select * from Product;
+
+Create table OrderDetail (
+discount varchar (50),
+Quantity int, 
+Subtotal float (10,2),
+fk_detail_cod_order int,
+fk_detail_id_product varchar (15),
+foreign key (fk_detail_cod_order) references Order_ (cod_order),
+foreign key (fk_detail_id_product) references Product (id_product)
+);

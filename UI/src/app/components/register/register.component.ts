@@ -52,9 +52,9 @@ export class RegisterComponent implements OnInit {
       console.log(this.provider);
 
       this.client.postRequest('http://localhost:5001/register/provider', this.provider).subscribe({
-        next: (v) => {
-          console.log(v);
-
+        next: (data: any) => {
+          console.log(data);
+          // localStorage.setItem('token', data.token);
         },
         error: (e) => {
           console.log(e);
