@@ -17,10 +17,10 @@ export const provider = async (req: Request, res: Response) => {
             city_provider,
             password_provider,
             description_provider,
+            number_provider,
             neighborhood,
             street,
-            number_street,
-            number_provider
+            number_street
         } = req.body;
 
         const password_hash = await bcrypt.hash(password_provider, 10);
@@ -34,10 +34,10 @@ export const provider = async (req: Request, res: Response) => {
             city_provider,
             password_provider: password_hash,
             description_provider,
+            number_provider,
             neighborhood,
             street,
-            number_street,
-            number_provider
+            number_street
         };
 
         registerProvider(data, (error: any, result: any) => {
@@ -99,12 +99,12 @@ export const grocer = async (req: Request, res: Response) => {
             if (error) {
                 res.status(500).json({ "error": error.message });
             } else {
-                const secret_key: any = process.env.SIGNING_KEY_TOKEN;
-                const token: any = generateToken(
-                    { role: "grocer", email: data.email_grocer },
-                    secret_key, new Date().getTime() + (2 * 60 * 1000)
-                );
-                res.status(200).json({ "Status": result[0][0].message_text, "token": token });
+                // const secret_key: any = process.env.SIGNING_KEY_TOKEN;
+                // const token: any = generateToken(
+                //     { role: "grocer", email: data.email_grocer },
+                //     secret_key, new Date().getTime() + (2 * 60 * 1000)
+                // );
+                res.status(200).json({ "Status": result[0][0].message_text });
             }
         })
     } catch (error) {

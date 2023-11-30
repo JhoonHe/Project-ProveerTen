@@ -44,10 +44,10 @@ export class RegisterComponent implements OnInit {
         city_provider: this.form.value.city_provider,
         password_provider: this.form.value.password_provider,
         description_provider: this.form.value.description_provider,
+        number_provider: this.form.value.number_provider,
         neighborhood: this.form.value.neighborhood,
         street: this.form.value.street,
-        number_street: this.form.value.number_street,
-        number_provider: this.form.value.number_provider
+        number_street: this.form.value.number_street
       }
       console.log(this.provider);
 

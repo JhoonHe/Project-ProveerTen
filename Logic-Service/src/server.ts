@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 
+import test from './routes/test';
+
 class Server {
 
     private app: express.Application;
@@ -24,11 +26,11 @@ class Server {
         this.app.use(express.json());
 
         // Cors
-        this.app.use(cors());
+        this.app.use(cors({ credentials: true, origin: 'http://localhost:4200' }));
     }
 
     routes() {
-
+        this.app.use('/test', test);
     }
 }
 

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClientService } from 'src/app/services/client.service';
 import { Router } from '@angular/router';
 import Provider from '../../interfaces/provider';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginComponent {
   form: FormGroup;
   provider: Provider = {} as Provider;
 
-  constructor(private fb: FormBuilder, private client: ClientService, private router: Router) {
+  constructor(private toastr: ToastrService, private fb: FormBuilder, private client: ClientService, private router: Router) {
     this.form = this.fb.group({
       email_provider: ['', [Validators.email]],
       password_provider: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(20)]],
@@ -31,13 +32,16 @@ export class LoginComponent {
       this.client.postRequest('http://localhost:5001/login/provider', this.provider).subscribe({
         next: (data: any) => {
           console.log(data);
-          // localStorage.setItem('token', data.token);
+          localStorage.setItem('token', data.token);
         },
-        error: (e) => {
-          console.log(e);
+        error: (e: any) => {
+          this.toastr.error(e.error.Status, '¡Error!');
+
         },
         complete: () => console.log('complete'),
       });
+    } else {
+      this.toastr.error('Verifique la información ingresada', '¡Error!');
     }
   }
 }

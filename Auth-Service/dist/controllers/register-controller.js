@@ -19,7 +19,7 @@ const grocer_service_1 = require("../services/grocer-service");
 const provider_service_1 = require("../services/provider-service");
 const provider = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { nit_provider, email_provider, name_provider, last_name_provider, name_company, city_provider, password_provider, description_provider, neighborhood, street, number_street, number_provider } = req.body;
+        const { nit_provider, email_provider, name_provider, last_name_provider, name_company, city_provider, password_provider, description_provider, number_provider, neighborhood, street, number_street } = req.body;
         const password_hash = yield bcrypt_1.default.hash(password_provider, 10);
         const data = {
             nit_provider,
@@ -30,10 +30,10 @@ const provider = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             city_provider,
             password_provider: password_hash,
             description_provider,
+            number_provider,
             neighborhood,
             street,
-            number_street,
-            number_provider
+            number_street
         };
         (0, provider_service_1.registerProvider)(data, (error, result) => {
             if (error) {
@@ -77,9 +77,12 @@ const grocer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 res.status(500).json({ "error": error.message });
             }
             else {
-                const secret_key = process.env.SIGNING_KEY_TOKEN;
-                const token = (0, generate_token_1.default)({ role: "grocer", email: data.email_grocer }, secret_key, new Date().getTime() + (2 * 60 * 1000));
-                res.status(200).json({ "Status": result[0][0].message_text, "token": token });
+                // const secret_key: any = process.env.SIGNING_KEY_TOKEN;
+                // const token: any = generateToken(
+                //     { role: "grocer", email: data.email_grocer },
+                //     secret_key, new Date().getTime() + (2 * 60 * 1000)
+                // );
+                res.status(200).json({ "Status": result[0][0].message_text });
             }
         });
     }

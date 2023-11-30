@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+
 import register from './routes/register';
 import login from './routes/login';
 
